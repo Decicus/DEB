@@ -8,7 +8,7 @@ var bot = new discord.Client({
 
 var epBase = 'https://ep.decapi.me';
 var urlTemplates = {
-    twitch: epBase + '/t/2/{id}.png',
+    twitch: epBase + '/t/2/{id}',
     bttv: epBase + '/b/2/{id}.{type}'
 };
 
@@ -90,7 +90,7 @@ var getBttvEmotes = function() {
             body.emotes.forEach(function(emote) {
                 emotes.bttv[emote.code.toLowerCase()] = {
                     id: emote.id,
-                    type: emote.type
+                    type: emote.imageType
                 };
             });
             console.log("Added global BTTV emotes");
@@ -121,7 +121,7 @@ var checkEmote = function(code) {
 
     if (emotes.bttv[code]) {
         var emote = emotes.bttv[code];
-        return urlTemplates.bttv.replace(['{id}', '{type}'], [emote.id, emote.type]);
+        return urlTemplates.bttv.replace('{id}', emote.id).replace('{type}', emote.type);
     }
 
     return null;
