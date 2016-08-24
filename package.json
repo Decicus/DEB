@@ -1,6 +1,6 @@
 {
   "name": "discord-emotes",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A bot dedicated to put Twitch, BTTV and FFZ emotes into Discord chats.",
   "main": "app.js",
   "scripts": {
