@@ -120,6 +120,7 @@ var checkEmote = function(code) {
     }
 
     if (emotes.bttv[code]) {
+        var emote = emotes.bttv[code];
         return urlTemplates.bttv.replace(['{id}', '{type}'], [emote.id, emote.type]);
     }
 
