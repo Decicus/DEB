@@ -14,7 +14,9 @@ var urlTemplates = {
 
 var emotes = {
     twitch: {},
-    bttv: {}
+    twitchLC: {},
+    bttv: {},
+    bttvLC: {}
 };
 
 var authUrl = 'https://discordapp.com/oauth2/authorize?client_id=' + config.discord.client_id + '&scope=bot&permissions=19456';
@@ -45,10 +47,14 @@ var getTwitchEmotes = function() {
             body = JSON.parse(body);
 
             body.emoticons.forEach(function(emote) {
-                emotes.twitch[emote.code.toLowerCase()] = {
+                var code = emote.code;
+                
+                emotes.twitch[code] = {
                     id: emote.id,
                     set: emote.emoticon_set
                 };
+
+                emotes.twitchLC[code.toLowerCase()] = code;
             });
             console.log("Added Twitch emotes");
         }
@@ -59,17 +65,25 @@ var getTwitchEmotes = function() {
                 body = JSON.parse(body);
 
                 body.emoticon_sets[0].forEach(function(emote) {
-                    emotes.twitch[emote.code.toLowerCase()] = {
+                    var code = emote.code;
+
+                    emotes.twitch[code] = {
                         id: emote.id,
                         set: 0
                     };
+
+                    emotes.twitchLC[code.toLowerCase()] = code;
                 });
 
                 body.emoticon_sets[457].forEach(function(emote) {
-                    emotes.twitch[emote.code.toLowerCase()] = {
+                    var code = emote.code;
+
+                    emotes.twitch[code] = {
                         id: emote.id,
                         set: 457
                     };
+
+                    emotes.twitchLC[code.toLowerCase()] = code;
                 });
                 console.log("Added and prioritized Twitch global emotes");
             }
@@ -88,10 +102,14 @@ var getBttvEmotes = function() {
             body = JSON.parse(body);
 
             body.emotes.forEach(function(emote) {
-                emotes.bttv[emote.code.toLowerCase()] = {
+                var code = emote.code;
+
+                emotes.bttv[code] = {
                     id: emote.id,
                     type: emote.imageType
                 };
+
+                emotes.bttvLC[code.toLowerCase()] = code;
             });
             console.log("Added global BTTV emotes");
         }
@@ -103,25 +121,44 @@ var getBttvEmotes = function() {
                 body = JSON.parse(body);
 
                 body.emotes.forEach(function(emote) {
-                    emotes.bttv[emote.code.toLowerCase()] = {
+                    var code = emote.code;
+
+                    emotes.bttv[code] = {
                         id: emote.id,
                         type: emote.imageType
                     };
-                    console.log("Added BTTV emotes for channel: " + channel);
+
+                    emotes.bttvLC[code.toLowerCase()] = code;
                 });
+
+                console.log("Added BTTV emotes for channel: " + channel);
             }
         });
     });
 };
 
-var checkEmote = function(code) {
-    if (emotes.twitch[code]) {
-        return urlTemplates.twitch.replace('{id}', emotes.twitch[code].id);
+var checkEmote = function(code, lowerCase) {
+    if (lowerCase === false) {
+        if (emotes.twitch[code]) {
+            return urlTemplates.twitch.replace('{id}', emotes.twitch[code].id);
+        }
+
+        if (emotes.bttv[code]) {
+            var emote = emotes.bttv[code];
+            return urlTemplates.bttv.replace('{id}', emote.id).replace('{type}', emote.type);
+        }
     }
 
-    if (emotes.bttv[code]) {
-        var emote = emotes.bttv[code];
-        return urlTemplates.bttv.replace('{id}', emote.id).replace('{type}', emote.type);
+    if (lowerCase === true) {
+        if (emotes.twitchLC[code]) {
+            var emote = emotes.twitch[emotes.twitchLC[code]];
+            return urlTemplates.twitch.replace('{id}', emote.id);
+        }
+
+        if (emotes.bttvLC[code]) {
+            var emote = emotes.bttv[emotes.bttvLC[code]];
+            return urlTemplates.bttv.replace('{id}', emote.id).replace('{type}', emote.type);
+        }
     }
 
     return null;
@@ -139,7 +176,7 @@ bot.on("ready", function() {
 });
 
 bot.on("message", function(message) {
-    var text = message.content.toLowerCase();
+    var text = message.content;
 
     if (message.channel && message.channel.server) {
         var words = text.split(" ");
@@ -148,17 +185,19 @@ bot.on("message", function(message) {
         for (var i = 0; i < words.length; i++) {
             var word = words[i];
             var code = null;
+            var lowerCase = true;
 
             if (word.startsWith("#")) {
                 code = word.substr(1);
+                lowerCase = false;
             }
 
             if (word.startsWith(":") && word.endsWith(":")) {
-                code = word.substr(1, word.length - 2);
+                code = word.substr(1, word.length - 2).toLowerCase();
             }
 
             if (code !== null) {
-                var emote = checkEmote(code);
+                var emote = checkEmote(code, lowerCase);
                 if (emote !== null) {
                     bot.sendMessage(message.channel, emote, function(error, message) {
                         if (error) {

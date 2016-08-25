@@ -14,8 +14,4 @@ config.bttv = {
     channels: []
 };
 
-config.ffz = {
-    channels: []
-};
-
 module.exports = config;
