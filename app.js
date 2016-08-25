@@ -48,7 +48,7 @@ var getTwitchEmotes = function() {
 
             body.emoticons.forEach(function(emote) {
                 var code = emote.code;
-                
+
                 emotes.twitch[code] = {
                     id: emote.id,
                     set: emote.emoticon_set
@@ -164,12 +164,46 @@ var checkEmote = function(code, lowerCase) {
     return null;
 };
 
+var commands = {
+    "!update_emotes": {
+        permissions: 100,
+        func: function(cb) {
+            config = require('./config.js');
+            getTwitchEmotes();
+            getBttvEmotes();
+            cb("Updated all emotes.");
+        }
+    },
+    "!invite": {
+        permissions: 0,
+        func: function(cb) {
+            cb("Use this URL to add the bot to a server you have permissions in: " + authUrl);
+        }
+    },
+    "!quit": {
+        permissions: 100,
+        func: function(cb) {
+            cb("Emotes bot will be shutting down in a few seconds... Goodbye!");
+            setTimeout(function() {
+                console.log("Shutting down bot...");
+                bot.logout(function() {
+                    process.exit();
+                });
+            }, 5000);
+        }
+    }
+};
+
 bot.on("disconnected", function() {
     console.log("Disconnected");
 });
 
 bot.on("ready", function() {
     console.log("Connected");
+    var now = new Date().toUTCString();
+    config.discord.admins.forEach(function(admin) {
+        bot.sendMessage(admin, "Emotes bot has been initialized: " + now);
+    });
 
     getTwitchEmotes();
     getBttvEmotes();
@@ -177,9 +211,28 @@ bot.on("ready", function() {
 
 bot.on("message", function(message) {
     var text = message.content;
+    var words = text.split(" ");
+
+    // Direct messages
+    if (!message.channel.server) {
+        var userId = message.author.id;
+        var permissions = 0;
+        if (config.discord.admins.indexOf(userId) > -1) {
+            permissions = 100;
+        }
+
+        var cmd = words[0];
+        if (commands[cmd] && commands[cmd].permissions <= permissions) {
+            commands[cmd].func(function(reply) {
+                bot.sendMessage(message.channel, reply);
+            }, {
+                message: text.replace(cmd + " ", null),
+                user: message.author
+            });
+        }
+    }
 
     if (message.channel && message.channel.server) {
-        var words = text.split(" ");
         var code = null;
 
         for (var i = 0; i < words.length; i++) {
