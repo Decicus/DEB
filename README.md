@@ -6,7 +6,9 @@ Some (if not most) of the code needs to be refactored, but currently it does its
 
 This utilizes another project of mine called [DEP (Discord Emotes Proxy)](https://github.com/Decicus/DEP), which is a very basic [Lumen](https://lumen.laravel.com/)-based web application.
 
-Most of the bot and web project was built over a span of 2-3 days.
+Most of the bot and web-based project was built over a span of 2-3 days.
+
+If you wish to use my currently hosted version of the bot, please use [this link](https://discordapp.com/oauth2/authorize?client_id=218423098494550018&scope=bot&permissions=19456).
 
 ## Features
 - Supports both Twitch (global/turbo/subscriber) and BetterTTV (global/channel) emotes.
