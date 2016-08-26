@@ -11,5 +11,9 @@
   "dependencies": {
     "discord.js": "^8.1.0",
     "request": "^2.74.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Decicus/DEB.git"
   }
 }
