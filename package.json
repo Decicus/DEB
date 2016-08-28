@@ -1,7 +1,7 @@
 {
   "name": "discord-emotes",
-  "version": "1.1.0",
-  "description": "A bot dedicated to put Twitch, BTTV and FFZ emotes into Discord chats.",
+  "version": "1.2.0",
+  "description": "A bot dedicated to embed Twitch and BetterTTV emotes into Discord.",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

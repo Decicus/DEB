@@ -1,6 +1,7 @@
 var discord = require('discord.js');
 var request = require('request');
 var config = require('./config.js');
+var version = "1.2.0";
 
 var bot = new discord.Client({
     autoReconnect: true
@@ -116,6 +117,7 @@ var getBttvEmotes = function() {
     });
 
     config.bttv.channels.forEach(function(channel) {
+        channel = channel.toLowerCase();
         get("https://api.betterttv.net/2/channels/" + channel, {}, function(error, response, body) {
             if (response.statusCode === 200) {
                 body = JSON.parse(body);
@@ -137,6 +139,13 @@ var getBttvEmotes = function() {
     });
 };
 
+/**
+ * Checks the specified code if it's a valid emote.
+ *
+ * @param  {string} code      Emote code to check for.
+ * @param  {bool} lowerCase   If true, it strict-checks with case-sensitivity in mind.
+ * @return {mixed}            null if no emote was found, string of URL if one was.
+ */
 var checkEmote = function(code, lowerCase) {
     if (lowerCase === false) {
         if (emotes.twitch[code]) {
@@ -164,14 +173,63 @@ var checkEmote = function(code, lowerCase) {
     return null;
 };
 
+/**
+ * Returns the bot's uptime, since the "ready" event was fired.
+ *
+ * @return {string}
+ */
+var uptime = function() {
+    // uptime returned in milliseconds
+    var seconds = (bot.uptime / 1000);
+    var time = [];
+
+    // Remember when I said I was going to refactor?
+    // Yeah...
+    if (seconds > 86400) {
+        var days = parseInt(seconds / 86400);
+        time.push(days + " day" + (days > 1 ? "s" : ""));
+        seconds = seconds % 86400;
+    }
+
+    if (seconds > 3600) {
+        var hours = parseInt(seconds / 3600);
+        time.push(hours + " hour" + (hours > 1 ? "s" : ""));
+        seconds = seconds % 3600;
+    }
+
+    if (seconds > 60) {
+        var minutes = parseInt(seconds / 60);
+        time.push(minutes + " minute" + (minutes > 1 ? "s" : ""));
+        seconds = seconds % 60;
+    }
+
+    seconds = parseInt(seconds);
+    if (seconds > 0) {
+        time.push(seconds + " second" + (seconds > 1 ? "s" : ""));
+    }
+
+    return time.join(", ");
+}
+
 var commands = {
-    "!update_emotes": {
-        permissions: 100,
+    "!bttv_channels": {
+        permissions: 0,
         func: function(cb) {
-            config = require('./config.js');
-            getTwitchEmotes();
-            getBttvEmotes();
-            cb("Updated all emotes.");
+            var channels = config.bttv.channels.join(", ");
+            cb("Current channels BetterTTV emotes are retrieved from are: " + channels);
+        }
+    },
+    "!info": {
+        permissions: 0,
+        func: function(cb) {
+            var msg = [
+                "**Bot version:** " + version,
+                "**Project URL:** https://github.com/Decicus/DEB",
+                "**Server connections:** " + bot.servers.length,
+                "**Uptime:** " + uptime()
+            ];
+
+            cb(msg.join("\n"));
         }
     },
     "!invite": {
@@ -191,7 +249,15 @@ var commands = {
                 });
             }, 5000);
         }
-    }
+    },
+    "!update_emotes": {
+        permissions: 100,
+        func: function(cb) {
+            getTwitchEmotes();
+            getBttvEmotes();
+            cb("Updating all emotes.");
+        }
+    },
 };
 
 bot.on("disconnected", function() {

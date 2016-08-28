@@ -9,10 +9,12 @@ As of version 1.1.0, they can be split up into two categories:
 - User (everyone else)
 
 ## User commands
+- `!bttv_channels` - Sends back the list of channels it retrieves BetterTTV emotes of.
 - `!invite` - Gives you an invite link to add the bot to a server you have the "Manage server" permission of.
+- `!info` - Sends back a message with some information about the bot (version, server connections, project URL and uptime).
 
 
 ## Admin commands
+- `!quit` - Disconnects the bot from Discord and shuts down the process for it.
 - `!update_emotes` - Refreshes the emote data.
     - **Note:** If you add one or more channels to BetterTTV channel emote list while the bot is running, then the channels that were added will not be updated until the bot has been restarted.
-- `!quit` - Disconnects the bot from Discord and shuts down the process for it.
