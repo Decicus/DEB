@@ -23,6 +23,9 @@ If you wish to use my currently hosted version of the bot, please use [this link
 - Commands:
     - There aren't very many of them, but they are all DM-based. This means you have to directly message the bot to use them. You can read more about them in the [commands](COMMANDS.md) page.
 
+## Changelog
+The full changelog can be found in the [changelog](CHANGELOG.md) file.
+
 ## Requirements
 - [Node.js & npm](https://nodejs.org/) has to be installed.
 - An application via the [Discord developer docs](https://discordapp.com/developers/docs/intro).
