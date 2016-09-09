@@ -2,7 +2,7 @@ var config = {};
 
 config.discord = {
     client_id: '',
-    token: '',
+    token: 'Bot YOUR_TOKEN_HERE',
     admins: ['']
 };
 

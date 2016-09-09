@@ -38,6 +38,7 @@ The full changelog can be found in the [changelog](CHANGELOG.md) file.
 2. After cloning, or extracting the release file, go into the install folder via the commandline and run `npm install` to install the dependencies.
 3. Once you're finished installing dependencies, rename `config.sample.js` to `config.js`.
 4. Fill in your `config.discord` values, where `client_id` and `token` are values from your [Discord developer application](https://discordapp.com/developers/applications/me) page.
+    - **Please make sure to JUST replace the `YOUR_TOKEN_HERE` text with your token, or else the bot will not be able to connect properly.**
 5. Fill in your Twitch developer **client ID** in `config.twitch.client_id`.
 6. **[Optional]** You can add an "array" (list) of BetterTTV channel emotes you want to retrieve as well in `config.bttv`.
     - Example: `channels: ['decicus', 'iwinuloselol']` will retrieve channel-specific emotes from myself and [iwinuloselol](https://www.twitch.tv/iwinuloselol).
