@@ -217,7 +217,7 @@ var uptime = function() {
  * @return {String} Datetime
  */
 var now = function() {
-    return "[" + new Date().toUTCString() "] ";
+    return "[" + new Date().toUTCString() + "] ";
 };
 
 var commands = {
