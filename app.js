@@ -282,7 +282,7 @@ bot.on("disconnected", function() {
 bot.on("ready", function() {
     console.log(now() + "Connected");
     config.discord.admins.forEach(function(admin) {
-        bot.sendMessage(admin, now + "Emotes bot has been initialized.");
+        bot.sendMessage(admin, now() + "Emotes bot has been initialized.");
     });
 
     getTwitchEmotes();
