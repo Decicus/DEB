@@ -1,7 +1,7 @@
 var discord = require('discord.js');
 var request = require('request');
 var config = require('./config.js');
-var version = "1.2.0";
+var version = "1.2.1";
 
 var bot = new discord.Client({
     autoReconnect: true
@@ -211,6 +211,15 @@ var uptime = function() {
     return time.join(", ");
 }
 
+/**
+ * Returns the current datetime.
+ *
+ * @return {String} Datetime
+ */
+var now = function() {
+    return "[" + new Date().toUTCString() "] ";
+};
+
 var commands = {
     "!bttv_channels": {
         permissions: 0,
@@ -243,7 +252,7 @@ var commands = {
         func: function(cb) {
             cb("Emotes bot will be shutting down in a few seconds... Goodbye!");
             setTimeout(function() {
-                console.log("Shutting down bot...");
+                console.log(now() + "Shutting down bot...");
                 bot.logout(function() {
                     process.exit();
                 });
@@ -260,15 +269,19 @@ var commands = {
     },
 };
 
+bot.on('error', function(error) {
+    console.log(now() + "ERROR OCCURRED:");
+    console.log(error);
+});
+
 bot.on("disconnected", function() {
-    console.log("Disconnected");
+    console.log(now() + "Disconnected");
 });
 
 bot.on("ready", function() {
-    console.log("Connected");
-    var now = new Date().toUTCString();
+    console.log(now() + "Connected");
     config.discord.admins.forEach(function(admin) {
-        bot.sendMessage(admin, "Emotes bot has been initialized: " + now);
+        bot.sendMessage(admin, now + "Emotes bot has been initialized.");
     });
 
     getTwitchEmotes();
@@ -320,7 +333,7 @@ bot.on("message", function(message) {
                 if (emote !== null) {
                     bot.sendMessage(message.channel, emote, function(error, message) {
                         if (error) {
-                            console.log("** ERROR OCCURED:");
+                            console.log(now() + "ERROR OCCURRED:");
                             console.log(error);
                         }
                     });
