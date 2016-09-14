@@ -1,7 +1,7 @@
 var discord = require('discord.js');
 var request = require('request');
 var config = require('./config.js');
-var version = "1.2.1";
+var version = "1.2.2";
 
 var bot = new discord.Client({
     autoReconnect: true
