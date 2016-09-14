@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.2.2
+- Fix typo that crashes the bot on launch.
+
 ## Version 1.2.1
 - Added more error logging.
 - Added timestamps to logging.
