@@ -38,6 +38,16 @@ var get = function(url, headers, cb) {
 };
 
 /**
+ * Returns the current datetime.
+ *
+ * @return {String} Datetime
+ */
+var now = function() {
+    var date = new Date().toUTCString();
+    return "[" + date + "] ";
+};
+
+/**
  * Sends a message to all admins of the bot.
  *
  * @param  {String} message The message to send
@@ -51,14 +61,14 @@ var sendAdminMessages = function(message) {
 };
 
 /**
- * Handles errors and messages admins with the error code.
+ * Handles errors and messages admins with the error object.
  *
  * @param  {Object} error Error object
  * @return {void}
  */
 var handleError = function(error) {
-    console.log(now() + "Error code logged: " + error.code);
-    sendAdminMessages(now() + error.code);
+    console.log(now() + "Error logged: " + error);
+    sendAdminMessages(now() + "\r\n" + "```" + JSON.stringify(error, null, 4) + "```");
 };
 
 /**
@@ -257,16 +267,6 @@ var uptime = function() {
     }
 
     return time.join(", ");
-}
-
-/**
- * Returns the current datetime.
- *
- * @return {String} Datetime
- */
-var now = function() {
-    var date = new Date().toUTCString();
-    return "[" + date + "] ";
 };
 
 var commands = {

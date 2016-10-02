@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.2.4
+- Errors objects that are sent to admins are now formatted as JSON.
+
 ## Version 1.2.3
 - Now messages admins on `request()` errors (used when retrieving emotes).
 
