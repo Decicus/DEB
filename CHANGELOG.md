@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.2.3
+- Now messages admins on `request()` errors (used when retrieving emotes).
+
 ## Version 1.2.2
 - Fix typo that crashes the bot on launch.
 

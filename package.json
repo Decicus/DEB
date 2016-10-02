@@ -1,6 +1,6 @@
 {
   "name": "discord-emotes",
-  "version": "1.2.0",
+  "version": "1.2.3",
   "description": "A bot dedicated to embed Twitch and BetterTTV emotes into Discord.",
   "main": "app.js",
   "scripts": {

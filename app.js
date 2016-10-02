@@ -38,12 +38,42 @@ var get = function(url, headers, cb) {
 };
 
 /**
+ * Sends a message to all admins of the bot.
+ *
+ * @param  {String} message The message to send
+ * @return {void}
+ */
+var sendAdminMessages = function(message) {
+    console.log(now() + "Admin messages sent: " + message);
+    config.discord.admins.forEach(function(admin) {
+        bot.sendMessage(admin, message);
+    });
+};
+
+/**
+ * Handles errors and messages admins with the error code.
+ *
+ * @param  {Object} error Error object
+ * @return {void}
+ */
+var handleError = function(error) {
+    console.log(now() + "Error code logged: " + error.code);
+    sendAdminMessages(now() + error.code);
+};
+
+/**
  * Refreshes all cached Twitch emotes.
  *
  * @return {void}
  */
 var getTwitchEmotes = function() {
     get("https://api.twitch.tv/kraken/chat/emoticon_images", {'Client-ID': config.twitch.client_id}, function(error, response, body) {
+        if (error) {
+            console.log(error);
+            handleError(error);
+            return;
+        }
+
         if (response.statusCode === 200) {
             body = JSON.parse(body);
 
@@ -62,6 +92,12 @@ var getTwitchEmotes = function() {
 
         // Global emotes override all else:
         get("https://api.twitch.tv/kraken/chat/emoticon_images?emotesets=0,457", {'Client-ID': config.twitch.client_id}, function(error, response, body) {
+            if (error) {
+                console.log(error);
+                handleError(error);
+                return;
+            }
+
             if (response.statusCode === 200) {
                 body = JSON.parse(body);
 
@@ -99,6 +135,12 @@ var getTwitchEmotes = function() {
  */
 var getBttvEmotes = function() {
     get("https://api.betterttv.net/2/emotes", {}, function(error, response, body) {
+        if (error) {
+            console.log(error);
+            handleError(error);
+            return;
+        }
+
         if (response.statusCode === 200) {
             body = JSON.parse(body);
 
@@ -119,6 +161,12 @@ var getBttvEmotes = function() {
     config.bttv.channels.forEach(function(channel) {
         channel = channel.toLowerCase();
         get("https://api.betterttv.net/2/channels/" + channel, {}, function(error, response, body) {
+            if (error) {
+                console.log(error);
+                handleError(error);
+                return;
+            }
+
             if (response.statusCode === 200) {
                 body = JSON.parse(body);
 
@@ -281,9 +329,7 @@ bot.on("disconnected", function() {
 
 bot.on("ready", function() {
     console.log(now() + "Connected");
-    config.discord.admins.forEach(function(admin) {
-        bot.sendMessage(admin, now() + "Emotes bot has been initialized.");
-    });
+    sendAdminMessages(now() + "Emotes bot has been initialized.");
 
     getTwitchEmotes();
     getBttvEmotes();
